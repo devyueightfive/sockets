@@ -10,7 +10,7 @@ myMessages = ['Hello', ',', 'world', '!']
 attempts = 3
 
 
-def send(messages):
+def getRepliesFrom(messages):
     replies = []
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.setblocking(1)
@@ -31,10 +31,10 @@ def send(messages):
         # send messages
         for message in messages:
             print("Client sent {0}".format(message))
-            client.sendall(message.encode())
+            client.sendall(str(message).encode())
             reply = client.recv(1024)
             print("Client received {0}".format(reply))
-            replies.append(reply)
+            replies.append(float(reply))
 
     except KeyboardInterrupt:
         print("Interrupted by user")
@@ -50,5 +50,5 @@ def send(messages):
 
 
 if __name__ == "__main__":
-    response = send(myMessages)
+    response = getRepliesFrom(myMessages)
     pprint(response)

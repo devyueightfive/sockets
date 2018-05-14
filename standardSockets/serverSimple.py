@@ -6,7 +6,7 @@ serverEndpoint = (serverIP, serverPort)
 
 
 def makeReplyOn(message):
-    return message
+    return str(float(message) ** 2).encode()
 
 
 if __name__ == "__main__":
