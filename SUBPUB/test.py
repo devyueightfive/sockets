@@ -9,6 +9,7 @@ class SomeTest(unittest.TestCase):
 
     def setUp(self):
 
+
     def testGetNumberOfData(self):
         number = 10
         result = Client.getData(number)
