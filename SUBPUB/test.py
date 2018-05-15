@@ -8,23 +8,31 @@ class SomeTest(unittest.TestCase):
 
     def setUp(self):
         self.server = serverPUB.Server()
-        self.server.startServer()
+        self.server.start()
 
     def tearDown(self):
         try:
+            print("Sent stop Signal to Server.")
             self.server.stopServer()
             self.server.join()
-        except:
-            print("Sent stop Signal to Server.")
+        finally:
+            print("Test Ended.")
 
     def testGetNumberOfData(self):
         import time
         time.sleep(3)
         print("Test: getNumberOfData")
         number = 10
-        result = clientSUB.Client.getData(number)
+        self.client = clientSUB.Client(number)
+        self.client.start()
+        self.client.join()
+        result = self.client.replies
         self.assertEqual(number, len(result))
-        print("Test Ended.")
+
+
+class AnotherTest(unittest.TestCase):
+    def setUp(self):
+        pass
 
 
 if __name__ == "__main__":

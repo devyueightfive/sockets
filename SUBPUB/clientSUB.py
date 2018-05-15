@@ -1,23 +1,33 @@
+import threading
+
 import zmq
+from colorama import Fore, Style
 
-from pprint import pprint
 
+class Client(threading.Thread):
+    replies = None
 
-class Client:
-    _serverIp = "127.0.0.1"
-    _serverPort = 5555
-    _serverEndPoint = f"tcp://{_serverIp}:{_serverPort}"
+    def __init__(self, number: int):
+        super().__init__()
+        self._serverIp = "127.0.0.1"
+        self._serverPort = 5555
+        self._serverEndPoint = f"tcp://{self._serverIp}:{self._serverPort}"
+        self.number = number
+        self.replies = []
 
-    @staticmethod
-    def getData(number):
-        replies = []
+    def run(self):
+        print(f"{Fore.YELLOW}Client started.{Style.RESET_ALL}")
         context = zmq.Context(1)
         with context.socket(zmq.SUB) as clientSocket:
-            clientSocket.connect(Client._serverEndPoint)
-            clientSocket.subscribe('')
-            for n in range(number):
-                replyFromServer = clientSocket.recv_string()
-                print(f"Received {replyFromServer}")
-                replies.append(float(replyFromServer))
+            try:
+                clientSocket.connect(self._serverEndPoint)
+                clientSocket.subscribe('')  # to all topics
+                for n in range(self.number):
+                    replyFromServer = clientSocket.recv_string()
+                    print(f"{Fore.YELLOW}Received {replyFromServer}{Style.RESET_ALL}")
+                    self.replies.append(float(replyFromServer))
+            finally:
+                pass
         context.term()
-        return replies
+        print(f"{Fore.YELLOW}Client Closed.{Style.RESET_ALL}")
+
